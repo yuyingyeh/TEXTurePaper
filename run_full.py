@@ -45,7 +45,7 @@ def main():
     else:
         assert (args.mask_type in ['white', 'random'])
         dreambooth_name = '%s_%s' % (args.dreambooth_name, args.mask_type)
-        cmd = 'python run_segmentation_bg_aug.py --dreambooth_name %s --mask_type %s' % (args.dreambooth_name, args.mask_type)
+        cmd = 'python3 run_segmentation_bg_aug.py --dreambooth_name %s --mask_type %s' % (args.dreambooth_name, args.mask_type)
         cmd += ' --u2net_root %s --threestudio_root %s' % (args.u2net_root, args.threestudio_root)
 
         os.chdir(args.threestudio_root)
