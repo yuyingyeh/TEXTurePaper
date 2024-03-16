@@ -5,13 +5,15 @@ import contextlib
 from pathlib import Path
 import torch
 from diffusers import StableDiffusionDepth2ImgPipeline
-from PIL import Image
+from PIL import Image, ImageOps
+from itertools import chain
 
 
 @dataclass
 class RunConfig:
-    diffusion_model_name: str = 'stabilityai/stable-diffusion-2-depth'
     images_dir: Path
+    diffusion_model_name: str = 'stabilityai/stable-diffusion-2-depth'
+    output_dir: str = ''
 
 
 @pyrallis.wrap()
@@ -23,10 +25,14 @@ def main(cfg: RunConfig):
         torch_dtype=torch.float16,
     ).to("cuda")
 
-    out_dir = cfg.images_dir.parent / f'{cfg.images_dir.stem}_processed'
+    if cfg.output_dir == '':
+        out_dir = cfg.images_dir.parent / f'{cfg.images_dir.stem}_processed'
+    else:
+        out_dir = Path(cfg.output_dir)
     out_dir.mkdir(exist_ok=True)
-    for path in tqdm(cfg.images_dir.glob('*.jpeg')):
+    for path in tqdm(chain(cfg.images_dir.glob('*.jpeg'), cfg.images_dir.glob('*.jpg'))):
         image = Image.open(path).resize((512, 512))
+        ImageOps.exif_transpose(image, in_place=True)
         image = [image]
         dtype = torch.float32
         pixel_values = sd.feature_extractor(images=image, return_tensors="pt").pixel_values
