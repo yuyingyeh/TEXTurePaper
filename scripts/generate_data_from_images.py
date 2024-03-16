@@ -30,7 +30,7 @@ def main(cfg: RunConfig):
     else:
         out_dir = Path(cfg.output_dir)
     out_dir.mkdir(exist_ok=True)
-    for path in tqdm(chain(cfg.images_dir.glob('*.jpeg'), cfg.images_dir.glob('*.jpg'))):
+    for path in tqdm(chain(cfg.images_dir.glob('*.jpeg'), cfg.images_dir.glob('*.jpg'), cfg.images_dir.glob('*.png'))):
         image = Image.open(path).resize((512, 512))
         ImageOps.exif_transpose(image, in_place=True)
         image = [image]
