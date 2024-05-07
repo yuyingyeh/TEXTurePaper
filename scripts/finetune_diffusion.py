@@ -13,7 +13,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.utils.checkpoint
-from diffusers.pipeline_utils import ImagePipelineOutput
+from diffusers.pipelines.pipeline_utils import ImagePipelineOutput
 from torch.utils.data import Dataset
 
 from accelerate import Accelerator
